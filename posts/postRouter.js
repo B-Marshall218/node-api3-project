@@ -3,7 +3,16 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  // do your magic!
+  Post.find(req.query)
+    .then(posts => {
+      res.status(200).json(posts)
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({
+        message: "Error retrieving the post"
+      })
+    })
 });
 
 router.get('/:id', (req, res) => {
@@ -20,7 +29,7 @@ router.put('/:id', (req, res) => {
 
 // custom middleware
 
-function validatePostId(req, res, next) {
+function validateUserId(req, res, next) {
   // do your magic!
 }
 
