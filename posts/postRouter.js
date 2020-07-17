@@ -2,8 +2,11 @@ const express = require('express');
 
 const router = express.Router();
 
+const Posts = require("./postDb");
+
+
 router.get('/', (req, res) => {
-  Post.find(req.query)
+  Posts.get()
     .then(posts => {
       res.status(200).json(posts)
     })

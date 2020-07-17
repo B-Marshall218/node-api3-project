@@ -18,9 +18,16 @@ router.post('/', validateUser, (req, res) => {
 
 });
 
-router.post('/:id/posts', validatePost, (req, res) => {
+router.post('/:id/posts', validateUserId, validatePost, (req, res) => {
   // do your magic!
-  Posts.insert(id)
+
+  // const postId = { user_id: req.params.id }
+  // const postUpdate = { text: req.body.text }
+
+  const postUpdate = {
+    ...req.body, user_id: req.params.id
+  }
+  Posts.insert(postUpdate)
     .then(post => {
       res.status(200).json(post)
     })
@@ -104,6 +111,10 @@ function validateUserId(req, res, next) {
       } else {
         res.status(400).json({ message: "Invalid User Id" })
       }
+    })
+    .catch(err => {
+      console.log(err)
+      res.status(500).json({ errmessage: "could not validate id" })
     })
 }
 // do your mag
