@@ -11,6 +11,9 @@ router.post('/', validateUser, (req, res) => {
     .then(user => {
       res.status(201).json(user)
     })
+    .catch(err => {
+      res.status(500).json({ errormessage: "unable to validate user", err })
+    })
   // do your magic!
 
 });
@@ -20,6 +23,9 @@ router.post('/:id/posts', validatePost, (req, res) => {
   Posts.insert(id)
     .then(post => {
       res.status(200).json(post)
+    })
+    .catch(err => {
+      res.status(500).json({ errormessage: "unable to validate post", err })
     })
 });
 
@@ -35,19 +41,55 @@ router.get('/', (req, res) => {
     })
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', validateUserId, (req, res) => {
   // do your magic!
+  Users.getById(req.params.id)
+    .then(user => {
+      res.status(200).json(user)
+    })
+    .catch(err => {
+      res.status(500).json({ errormessage: "user could not be retrieved", err })
+    })
 });
 
 router.get('/:id/posts', (req, res) => {
   // do your magic!
+  Posts.getById(req.params.id)
+    .then(post => {
+      res.status(200).json(post)
+    })
+    .catch(err => {
+      res.status(500).json({ message: "error getting post", err })
+    })
+
 });
 
 router.delete('/:id', (req, res) => {
   // do your magic!
+  Users.remove(req.params.id)
+    .then(user => {
+      if (user > 0) {
+        res.status(200).json({ message: "delete successful" })
+      } else {
+        res.status(404).json({ message: "this user id does not exist" })
+      }
+    })
+    .catch(err => {
+      res.status(500).json({ errormessage: "the user could not be removed", err })
+    })
 });
 
 router.put('/:id', (req, res) => {
+  const change = req.body
+  Users.update(req.params.id, change)
+    .then(user => {
+      res.status(200).json(user)
+    })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json({ errormessage: "could not update user" })
+    })
+
   // do your magic!
 });
 
